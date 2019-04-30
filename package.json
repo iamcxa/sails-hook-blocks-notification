@@ -1,0 +1,34 @@
+{
+  "name": "sails-hook-blocks-notification",
+  "version": "0.1.0",
+  "description": "In-app Notification for sails-hook-blocks",
+  "main": "index.js",
+  "author": "Kent Chen",
+  "keywords": [
+    "sails",
+    "sails.js",
+    "sails-hook",
+    "loader",
+    "mvc",
+    "hook"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "@sailshq/eslint": "^4.19.3",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "sails": "^1.1.0",
+    "supertest": "^3.3.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "sails-util-micro-apps": "git+https://github.com/MoreAppio/sails-util-micro-apps.git",
+    "aws-sns-helper": "0.1.12"
+  },
+  "sails": {
+    "isHook": true
+  }
+}

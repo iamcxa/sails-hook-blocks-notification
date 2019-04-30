@@ -1,0 +1,21 @@
+{ 
+  "extends": [
+    "airbnb-base",
+    ".eslintrc-sails",
+    ".eslintrc-services",
+    ".eslintrc-models",
+    "../../../.eslintrc"
+  ],
+  "plugins": [
+    "import"
+  ],
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      "ForInStatement",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "no-await-in-loop": "warn"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "globals": {
+    "Notification": true,
+    "UserDevice": true,
+    "UserNotification": true
+  }
+}
