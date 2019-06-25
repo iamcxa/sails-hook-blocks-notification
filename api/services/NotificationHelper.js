@@ -57,7 +57,7 @@ module.exports = {
     platform,
   }) {
     try {
-      sails.log('create Notification');
+      // sails.log('create Notification');
       let devices = [];
       const notification = await Notification.create(_.omit(data, ['id']));
       if (userIds) {
@@ -105,7 +105,7 @@ module.exports = {
     data,
     platform,
   }) {
-    sails.log('send message directly');
+    // sails.log('send message directly');
     const {
       AWS_SNS_ARN_APNS,
       AWS_SNS_ARN_APNS_SANDBOX,
