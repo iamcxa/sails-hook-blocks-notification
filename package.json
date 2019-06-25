@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-blocks-notification",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "In-app Notification for sails-hook-blocks",
   "main": "index.js",
   "author": "Kent Chen",
