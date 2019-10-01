@@ -2,6 +2,35 @@ import SNSHelper from 'aws-sns-helper';
 import _ from 'lodash';
 
 module.exports = {
+  snsHelper: null,
+  getSnsHelper() {
+    const ENV = sails.config.environment;
+    const {
+      AWS_SNS_ARN_APNS,
+      AWS_SNS_ARN_APNS_SANDBOX,
+      AWS_SNS_ARN_GCM,
+      SNS_KEY,
+      SNS_SECRET,
+      SNS_REGION,
+      IS_ON_SERVER = null,
+    } = sails.config.aws.sns;
+    if (!this.snsHelper) {
+      this.snsHelper = new SNSHelper({
+        AWS_SNS_ARN_APNS,
+        AWS_SNS_ARN_APNS_SANDBOX,
+        AWS_SNS_ARN_GCM,
+        SNS_KEY,
+        SNS_SECRET,
+        SNS_REGION,
+        ENV,
+        // 真實送出 for test
+        IS_ON_SERVER: IS_ON_SERVER === null
+          ? ENV === 'production'
+          : IS_ON_SERVER,
+      });
+    }
+    return this.snsHelper;
+  },
   /**
    *
    * 設定 Notification 為全部已讀
@@ -105,15 +134,7 @@ module.exports = {
     data,
     platform,
   }) {
-    // sails.log('send message directly');
-    const {
-      AWS_SNS_ARN_APNS,
-      AWS_SNS_ARN_APNS_SANDBOX,
-      AWS_SNS_ARN_GCM,
-      SNS_KEY,
-      SNS_SECRET,
-      SNS_REGION,
-    } = sails.config.aws.sns;
+    sails.log('send message directly');
     const ENV = sails.config.environment;
     let devices = [];
     try {
@@ -122,17 +143,6 @@ module.exports = {
         data,
         platform,
       });
-      const snsHelper = new SNSHelper({
-        AWS_SNS_ARN_APNS,
-        AWS_SNS_ARN_APNS_SANDBOX,
-        AWS_SNS_ARN_GCM,
-        SNS_KEY,
-        SNS_SECRET,
-        SNS_REGION,
-        ENV,
-        // 真實送出 for test
-        IS_ON_SERVER: sails.config.environment === 'production',
-      });
       const messages = this.buildMessagesWithDevicePlatform({
         devices,
         ENV,
@@ -140,7 +150,7 @@ module.exports = {
         message: data.message,
       });
       // console.log('=========== \nmessages=>', messages);
-      return await snsHelper.pushNotificationBatch({
+      return await this.getSnsHelper().pushNotificationBatch({
         messages,
         defaultAttributesData: data.messageAttributes,
       });
@@ -244,28 +254,9 @@ module.exports = {
     messageAttributes = null,
   }) {
     sails.log('send message by model');
-    const {
-      AWS_SNS_ARN_APNS,
-      AWS_SNS_ARN_APNS_SANDBOX,
-      AWS_SNS_ARN_GCM,
-      SNS_KEY,
-      SNS_SECRET,
-      SNS_REGION,
-    } = sails.config.aws.sns;
     const ENV = sails.config.environment;
     const devices = [];
     try {
-      const snsHelper = new SNSHelper({
-        AWS_SNS_ARN_APNS,
-        AWS_SNS_ARN_APNS_SANDBOX,
-        AWS_SNS_ARN_GCM,
-        SNS_KEY,
-        SNS_SECRET,
-        SNS_REGION,
-        ENV,
-        // 真實送出 for test
-        IS_ON_SERVER: true,
-      });
       Users.forEach((user) => {
         if (_.isNil(user.UserDevices)
             || _.isEmpty(user.UserDevices)) {
@@ -281,7 +272,7 @@ module.exports = {
         title,
         message,
       });
-      return await snsHelper.pushNotificationBatch({
+      return await this.getSnsHelper().pushNotificationBatch({
         messages,
         defaultAttributesData: messageAttributes,
       });
